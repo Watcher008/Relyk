@@ -1,4 +1,4 @@
-const hre = require("hardhat");
+import hre from "hardhat";
 
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
@@ -6,11 +6,14 @@ async function main() {
   console.log("Deploying RELYK with account:", deployer.address);
 
   const RELYK = await hre.ethers.getContractFactory("RELYK");
-  const token = await RELYK.deploy(deployer.address);
 
-  await token.waitForDeployment();
+  // Pass the initialOwner address to the constructor
+  const relyk = await RELYK.deploy(deployer.address);
 
-  console.log("RELYK deployed to:", await token.getAddress());
+  await relyk.waitForDeployment();
+
+  const address = await relyk.getAddress();
+  console.log("RELYK deployed to:", address);
 }
 
 main().catch((error) => {
